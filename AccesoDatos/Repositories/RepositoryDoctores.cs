@@ -28,28 +28,69 @@ namespace AccesoDatos.Repositories
             this.com.CommandType = System.Data.CommandType.Text;
         }
 
-        public int InsertarDoctor(int idhospital, int iddoctor,string apellido,string especialidad, int salario)
+        public int MaxIdDoctor()
         {
-            string sql = "INSERT INTO DOCTOR VALUES(@IDH,@IDD,@APELLIDO,@ESPECIALIDAD,@SALARIO)";
-            SqlParameter pamidhospital = new SqlParameter("@IDH",idhospital);
-            SqlParameter pamiddoctor = new SqlParameter("@IDD", iddoctor);
-            SqlParameter pamapellido = new SqlParameter("@APELLIDO", apellido);
-            SqlParameter pamespecialidad = new SqlParameter("@ESPECIALIDAD", especialidad);
-            SqlParameter pamsalario = new SqlParameter("@SALARIO",salario);
+            int id = 0;
+            string sql = "SELECT MAX(DOCTOR_NO) + 10 AS MAXIMO FROM DOCTOR";
+            this.com.CommandText = sql;
 
-            this.com.Parameters.Add(pamidhospital);
-            this.com.Parameters.Add(pamiddoctor);
-            this.com.Parameters.Add(pamapellido);
-            this.com.Parameters.Add(pamespecialidad);
-            this.com.Parameters.Add(pamsalario);
+            this.cn.Open();
+            id = int.Parse(this.com.ExecuteScalar().ToString());
+
+            this.cn.Close();
+
+            return id;
+        }
+
+        public int InsertarDoctor(string nombrehospital,string apellido,string especialidad, int salario)
+        {
+            int insertados = 0;
+            int iddoctor = this.MaxIdDoctor();
+
+            int idh = 0;
+            bool seguir = true;
+            string sql = "SELECT HOSPITAL_COD FROM HOSPITAL WHERE NOMBRE=@NOMBRE";
+            SqlParameter pamnombre = new SqlParameter("@NOMBRE", nombrehospital);
+            this.com.Parameters.Add(pamnombre);
 
             this.com.CommandText = sql;
 
             this.cn.Open();
-            int insertados = this.com.ExecuteNonQuery();
-            this.cn.Close();
-            this.com.Parameters.Clear();
 
+            try
+            {
+                idh = int.Parse(this.com.ExecuteScalar().ToString());
+            }
+            catch (NullReferenceException err)
+            {
+                Console.WriteLine("Hospital no existe en la BBDD");
+                seguir = false;
+            }
+            if (seguir)
+            {
+                sql = "INSERT INTO DOCTOR VALUES(@IDH,@IDD,@APELLIDO,@ESPECIALIDAD,@SALARIO)";
+                SqlParameter pamidhospital = new SqlParameter("@IDH", idh);
+                SqlParameter pamiddoctor = new SqlParameter("@IDD", iddoctor);
+                SqlParameter pamapellido = new SqlParameter("@APELLIDO", apellido);
+                SqlParameter pamespecialidad = new SqlParameter("@ESPECIALIDAD", especialidad);
+                SqlParameter pamsalario = new SqlParameter("@SALARIO", salario);
+
+                this.com.Parameters.Add(pamidhospital);
+                this.com.Parameters.Add(pamiddoctor);
+                this.com.Parameters.Add(pamapellido);
+                this.com.Parameters.Add(pamespecialidad);
+                this.com.Parameters.Add(pamsalario);
+
+                this.com.CommandText = sql;
+
+                insertados = this.com.ExecuteNonQuery();
+                this.cn.Close();
+                this.com.Parameters.Clear();
+            }
+            else
+            {
+                insertados = 0;
+            }
             return insertados;
         }
 
@@ -119,5 +160,34 @@ namespace AccesoDatos.Repositories
 
             return doctores;
         }
+
+        public List<Hospital> GetHospitales()
+        {
+            List<Hospital> hospitales = new List<Hospital>();
+
+            string sql = "SELECT * FROM HOSPITAL ";
+            this.com.CommandText = sql;
+
+            this.cn.Open();
+            this.reader = this.com.ExecuteReader();
+            while (reader.Read())
+            {
+                Hospital hospital = new Hospital();
+                hospital.IdHospital= int.Parse(this.reader["HOSPITAL_COD"].ToString());
+                hospital.Nombre= this.reader["NOMBRE"].ToString();
+                hospital.Direccion= this.reader["DIRECCION"].ToString();
+
+                hospitales.Add(hospital);
+            }
+            this.reader.Close();
+            this.cn.Close();
+
+            return hospitales;
+        }
+
+        //public int ModificarSalario(int salario, string hospital)
+        //{
+        //    return 0;
+        //}
     }
 }

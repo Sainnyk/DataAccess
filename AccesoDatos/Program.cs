@@ -40,7 +40,8 @@ namespace AccesoDatos
                 Console.WriteLine("2.- Modificar Doctor");
                 Console.WriteLine("3.- Eliminar Doctor");
                 Console.WriteLine("4.- Mostrar todos los doctores");
-                Console.WriteLine("5.- Salir de App");
+                Console.WriteLine("5.- Incrementar salario");
+                Console.WriteLine("6.- Salir de App");
                 Console.WriteLine("Selecciona una opcion: ");
                 opcion = int.Parse(Console.ReadLine());
 
@@ -59,8 +60,11 @@ namespace AccesoDatos
                 else if (opcion == 4)
                 {
                     MostrarDoctoresRepo();
+                }else if (opcion == 5)
+                {
+                    AumentarSalarioRepo();
                 }
-                else if (opcion == 5)
+                else if (opcion == 6)
                 {
                     Console.WriteLine("Cerrando aplicación");
                 }
@@ -70,21 +74,32 @@ namespace AccesoDatos
                 }
             }
         }
+        static void AumentarSalarioRepo()
+        {
+            Console.WriteLine("Introduzca el SALARIO a incrementar");
+            int salario = int.Parse(Console.ReadLine());
+            Console.WriteLine("Introduzca el HOSPITAL a modificar");
+            string hospital = Console.ReadLine();
 
+            int modificados = repoDoctor.ModificarSalario(salario, hospital);
+
+            Console.WriteLine("Registros modificados: " + modificados);
+        }
         static void InsertDoctorRepo()
         {
-            Console.WriteLine("Indice el ID del hospital: ");
-            int idhospital = int.Parse(Console.ReadLine());
-            Console.WriteLine("Indice el ID del doctor: ");
-            int iddoctor = int.Parse(Console.ReadLine());
-            Console.WriteLine("Indice el APELLIDO del doctor: ");
+            int id = repoDoctor.MaxIdDoctor();
+            Console.WriteLine("El nuevo id sera: " + id);
+            Console.WriteLine("Introduzca el NOMBRE del hospital: ");
+            string hospital = Console.ReadLine();
+
+            Console.WriteLine("Introduzca el APELLIDO del doctor: ");
             string apellido = Console.ReadLine();
-            Console.WriteLine("Indice la ESPECIALIDAD del doctor: ");
+            Console.WriteLine("Introduzca la ESPECIALIDAD del doctor: ");
             string especialidad = Console.ReadLine();
-            Console.WriteLine("Indice el SALARIO del doctor: ");
+            Console.WriteLine("Introduzca el SALARIO del doctor: ");
             int salario = int.Parse(Console.ReadLine());
 
-            int insertados = repoDoctor.InsertarDoctor(idhospital,iddoctor,apellido,especialidad,salario);
+            int insertados = repoDoctor.InsertarDoctor(hospital, apellido,especialidad, salario);
 
 
             Console.WriteLine("Doctores insertados: " + insertados);
