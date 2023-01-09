@@ -10,6 +10,7 @@ namespace AccesoDatos
         //Se hace a nivel de clase para usar el objeto en distintos métodos.
         static RepositoryDepartamentos repo = new RepositoryDepartamentos(); //Se pone static para poder cogerlo en la parte de abajo
 
+        static RepositoryDoctores repoDoctor = new RepositoryDoctores();
 
 
 
@@ -25,7 +26,106 @@ namespace AccesoDatos
             //UpdateDepartamentoRepo();
             //DeleteDepartamentoRepo();
             //MostrarDepartamentos();
-            AppCrudDepartamentos();
+            //AppCrudDepartamentos();
+            AppCrudDoctores();
+        }
+        static void AppCrudDoctores()
+        {
+            int opcion = -1;
+            while (opcion != 5)
+            {
+                Console.WriteLine("-------------------CRUD DOCTORES---------------------");
+                Console.WriteLine("----------------------------------------------------------");
+                Console.WriteLine("1.- Insertar Doctor");
+                Console.WriteLine("2.- Modificar Doctor");
+                Console.WriteLine("3.- Eliminar Doctor");
+                Console.WriteLine("4.- Mostrar todos los doctores");
+                Console.WriteLine("5.- Salir de App");
+                Console.WriteLine("Selecciona una opcion: ");
+                opcion = int.Parse(Console.ReadLine());
+
+                if (opcion == 1)
+                {
+                    InsertDoctorRepo();
+                }
+                else if (opcion == 2)
+                {
+                    UpdateDoctorRepo();
+                }
+                else if (opcion == 3)
+                {
+                    DeleteDoctorRepo();
+                }
+                else if (opcion == 4)
+                {
+                    MostrarDoctoresRepo();
+                }
+                else if (opcion == 5)
+                {
+                    Console.WriteLine("Cerrando aplicación");
+                }
+                else
+                {
+                    Console.WriteLine("Opcion invalida");
+                }
+            }
+        }
+
+        static void InsertDoctorRepo()
+        {
+            Console.WriteLine("Indice el ID del hospital: ");
+            int idhospital = int.Parse(Console.ReadLine());
+            Console.WriteLine("Indice el ID del doctor: ");
+            int iddoctor = int.Parse(Console.ReadLine());
+            Console.WriteLine("Indice el APELLIDO del doctor: ");
+            string apellido = Console.ReadLine();
+            Console.WriteLine("Indice la ESPECIALIDAD del doctor: ");
+            string especialidad = Console.ReadLine();
+            Console.WriteLine("Indice el SALARIO del doctor: ");
+            int salario = int.Parse(Console.ReadLine());
+
+            int insertados = repoDoctor.InsertarDoctor(idhospital,iddoctor,apellido,especialidad,salario);
+
+
+            Console.WriteLine("Doctores insertados: " + insertados);
+        }
+
+        static void UpdateDoctorRepo()
+        {
+            Console.WriteLine("Inserte el ID del doctor a modificar: ");
+            int iddoctor = int.Parse(Console.ReadLine());
+            Console.WriteLine("Inserte el nuevo ID del hospital del doctor:");
+            int iddhospital = int.Parse(Console.ReadLine());
+            Console.WriteLine("Inserte el nuevo NOMBRE del doctor: ");
+            string nombre = Console.ReadLine();
+            Console.WriteLine("Inserte la nueva ESPECIALIDAD del doctor: ");
+            string especialidad = Console.ReadLine();
+            Console.WriteLine("Inserte el nuevo SALARIO: ");
+            int salario = int.Parse(Console.ReadLine());
+
+            int modificados = repoDoctor.UpdateDoctor(iddhospital,iddoctor,nombre,especialidad,salario);
+
+            Console.WriteLine("Doctores modificados: " + modificados);
+        }
+
+        static void DeleteDoctorRepo()
+        {
+            Console.WriteLine("Inserte el ID del doctor a eliminar");
+            int id = int.Parse(Console.ReadLine());
+
+            int eliminados = repoDoctor.DeleteDoctor(id);
+
+            Console.WriteLine("Doctores eliminados: "+ eliminados);
+        }
+
+        static void MostrarDoctoresRepo()
+        {
+            List<Doctor> doctores = repoDoctor.GetDoctores();
+
+            foreach(Doctor doctor in doctores)
+            {
+                Console.WriteLine(doctor.IdHospital + " - " + doctor.IdDoctor + " - " + doctor.Apellido + " - " + doctor.Especialidad+ " - "+doctor.Salario);
+            }
         }
 
         static void AppCrudDepartamentos()
