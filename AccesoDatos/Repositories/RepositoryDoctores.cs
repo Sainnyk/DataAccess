@@ -185,9 +185,6 @@ namespace AccesoDatos.Repositories
             return hospitales;
         }
 
-        //public int ModificarSalario(int salario, string hospital)
-        //{
-        //    return 0;
-        //}
+    
     }
 }

@@ -74,17 +74,7 @@ namespace AccesoDatos
                 }
             }
         }
-        static void AumentarSalarioRepo()
-        {
-            Console.WriteLine("Introduzca el SALARIO a incrementar");
-            int salario = int.Parse(Console.ReadLine());
-            Console.WriteLine("Introduzca el HOSPITAL a modificar");
-            string hospital = Console.ReadLine();
-
-            int modificados = repoDoctor.ModificarSalario(salario, hospital);
-
-            Console.WriteLine("Registros modificados: " + modificados);
-        }
+ 
         static void InsertDoctorRepo()
         {
             int id = repoDoctor.MaxIdDoctor();
